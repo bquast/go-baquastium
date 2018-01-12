@@ -551,7 +551,7 @@ services:
     ports:
       - "{{.Port}}:80"{{end}}
     environment:
-      - ETHSTATS_PAGE={{.EthstatsPage}}
+      - BAQSTATS_PAGE={{.EthstatsPage}}
       - EXPLORER_PAGE={{.ExplorerPage}}
       - WALLET_PAGE={{.WalletPage}}
       - FAUCET_PAGE={{.FaucetPage}}{{if .VHost}}
@@ -744,7 +744,7 @@ func checkDashboard(client *sshClient, network string) (*dashboardInfos, error) 
 	return &dashboardInfos{
 		host:     host,
 		port:     port,
-		ethstats: infos.envvars["ETHSTATS_PAGE"],
+		ethstats: infos.envvars["BAQSTATS_PAGE"],
 		explorer: infos.envvars["EXPLORER_PAGE"],
 		wallet:   infos.envvars["WALLET_PAGE"],
 		faucet:   infos.envvars["FAUCET_PAGE"],

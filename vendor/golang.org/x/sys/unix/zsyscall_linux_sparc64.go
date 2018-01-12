@@ -874,7 +874,7 @@ func Sethostname(p []byte) (err error) {
 	} else {
 		_p0 = unsafe.Pointer(&_zero)
 	}
-	_, _, e1 := Syscall(SYS_SETHOSTNAME, uintptr(_p0), uintptr(len(p)), 0)
+	_, _, e1 := Syscall(SYS_SBAQOSTNAME, uintptr(_p0), uintptr(len(p)), 0)
 	if e1 != 0 {
 		err = errnoErr(e1)
 	}

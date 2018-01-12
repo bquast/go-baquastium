@@ -126,7 +126,7 @@ func suitableCallbacks(rcvr reflect.Value, typ reflect.Type) (callbacks, subscri
 	callbacks := make(callbacks)
 	subscriptions := make(subscriptions)
 
-METHODS:
+MBAQODS:
 	for m := 0; m < typ.NumMethod(); m++ {
 		method := typ.Method(m)
 		mtype := method.Type
@@ -155,12 +155,12 @@ METHODS:
 				if isExportedOrBuiltinType(argType) {
 					h.argTypes[i-firstArg] = argType
 				} else {
-					continue METHODS
+					continue MBAQODS
 				}
 			}
 
 			subscriptions[mname] = &h
-			continue METHODS
+			continue MBAQODS
 		}
 
 		// determine method arguments, ignore first arg since it's the receiver type
@@ -169,7 +169,7 @@ METHODS:
 		for i := firstArg; i < numIn; i++ {
 			argType := mtype.In(i)
 			if !isExportedOrBuiltinType(argType) {
-				continue METHODS
+				continue MBAQODS
 			}
 			h.argTypes[i-firstArg] = argType
 		}
@@ -177,7 +177,7 @@ METHODS:
 		// check that all returned values are exported or builtin types
 		for i := 0; i < mtype.NumOut(); i++ {
 			if !isExportedOrBuiltinType(mtype.Out(i)) {
-				continue METHODS
+				continue MBAQODS
 			}
 		}
 
@@ -191,13 +191,13 @@ METHODS:
 		}
 
 		if h.errPos >= 0 && h.errPos != mtype.NumOut()-1 {
-			continue METHODS
+			continue MBAQODS
 		}
 
 		switch mtype.NumOut() {
 		case 0, 1, 2:
 			if mtype.NumOut() == 2 && h.errPos == -1 { // method must one return value and 1 error
-				continue METHODS
+				continue MBAQODS
 			}
 			callbacks[mname] = &h
 		}

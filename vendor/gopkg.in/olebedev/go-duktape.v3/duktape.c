@@ -32,7 +32,7 @@
 *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-*  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+*  LIABILITY, WHBAQER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 *  THE SOFTWARE.
 */
@@ -8949,7 +8949,7 @@ DUK_INTERNAL_DECL duk_uint32_t duk_heap_hashstring(duk_heap *heap, const duk_uin
 #define DUK_DBG_CMD_DUMPHEAP             0x20
 #define DUK_DBG_CMD_GETBYTECODE          0x21
 #define DUK_DBG_CMD_APPREQUEST           0x22
-#define DUK_DBG_CMD_GETHEAPOBJINFO       0x23
+#define DUK_DBG_CMD_GBAQEAPOBJINFO       0x23
 #define DUK_DBG_CMD_GETOBJPROPDESC       0x24
 #define DUK_DBG_CMD_GETOBJPROPDESCRANGE  0x25
 
@@ -44454,7 +44454,7 @@ DUK_LOCAL void duk__debug_process_message(duk_hthread *thr) {
 			break;
 		}
 #if defined(DUK_USE_DEBUGGER_INSPECT)
-		case DUK_DBG_CMD_GETHEAPOBJINFO: {
+		case DUK_DBG_CMD_GBAQEAPOBJINFO: {
 			duk__debug_handle_get_heap_obj_info(thr, heap);
 			break;
 		}
@@ -72717,10 +72717,10 @@ DUK_LOCAL DUK__INLINE_PERF void duk__prepost_incdec_var_helper(duk_hthread *thr,
  */
 
 #define DUK__LONGJMP_RESTART   0  /* state updated, restart bytecode execution */
-#define DUK__LONGJMP_RETHROW   1  /* exit bytecode executor by rethrowing an error to caller */
+#define DUK__LONGJMP_RBAQROW   1  /* exit bytecode executor by rethrowing an error to caller */
 
-#define DUK__RETHAND_RESTART   0  /* state updated, restart bytecode execution */
-#define DUK__RETHAND_FINISHED  1  /* exit bytecode execution with return value */
+#define DUK__RBAQAND_RESTART   0  /* state updated, restart bytecode execution */
+#define DUK__RBAQAND_FINISHED  1  /* exit bytecode execution with return value */
 
 /* XXX: optimize reconfig valstack operations so that resize, clamp, and setting
  * top are combined into one pass.
@@ -73327,7 +73327,7 @@ DUK_LOCAL duk_small_uint_t duk__handle_longjmp(duk_hthread *thr, duk_activation 
 				 * final catcher finish unwinding (esp. value stack).
 				 */
 				DUK_D(DUK_DPRINT("-> throw propagated up to entry level, rethrow and exit bytecode executor"));
-				retval = DUK__LONGJMP_RETHROW;
+				retval = DUK__LONGJMP_RBAQROW;
 				goto just_return;
 			}
 
@@ -73527,7 +73527,7 @@ DUK_LOCAL duk_small_uint_t duk__handle_return(duk_hthread *thr, duk_activation *
 			duk__handle_finally(thr, thr->valstack_top - 1, DUK_LJ_TYPE_RETURN);
 
 			DUK_DD(DUK_DDPRINT("-> return caught by 'finally', restart execution"));
-			return DUK__RETHAND_RESTART;
+			return DUK__RBAQAND_RESTART;
 		}
 
 		duk_hthread_catcher_unwind_norz(thr, act);
@@ -73540,7 +73540,7 @@ DUK_LOCAL duk_small_uint_t duk__handle_return(duk_hthread *thr, duk_activation *
 		 */
 
 		DUK_DDD(DUK_DDDPRINT("-> return propagated up to entry level, exit bytecode executor"));
-		return DUK__RETHAND_FINISHED;
+		return DUK__RBAQAND_FINISHED;
 	}
 
 	if (thr->callstack_top >= 2) {
@@ -73576,7 +73576,7 @@ DUK_LOCAL duk_small_uint_t duk__handle_return(duk_hthread *thr, duk_activation *
 		duk__reconfig_valstack_ecma_return(thr);
 
 		DUK_DD(DUK_DDPRINT("-> return not intercepted, restart execution in caller"));
-		return DUK__RETHAND_RESTART;
+		return DUK__RBAQAND_RESTART;
 	}
 
 #if defined(DUK_USE_COROUTINE_SUPPORT)
@@ -73613,11 +73613,11 @@ DUK_LOCAL duk_small_uint_t duk__handle_return(duk_hthread *thr, duk_activation *
 #endif
 
 	DUK_DD(DUK_DDPRINT("-> return not caught, thread terminated; handle like yield, restart execution in resumer"));
-	return DUK__RETHAND_RESTART;
+	return DUK__RBAQAND_RESTART;
 #else
 	/* Without coroutine support this case should never happen. */
 	DUK_ERROR_INTERNAL(thr);
-	return DUK__RETHAND_FINISHED;  /* not executed */
+	return DUK__RBAQAND_FINISHED;  /* not executed */
 #endif
 }
 
@@ -74448,10 +74448,10 @@ DUK_LOCAL DUK__NOINLINE_PERF duk_small_uint_t duk__handle_op_endfin(duk_hthread 
 
 		duk_push_tval(thr, tv1);
 		ret_result = duk__handle_return(thr, entry_act);
-		if (ret_result == DUK__RETHAND_RESTART) {
+		if (ret_result == DUK__RBAQAND_RESTART) {
 			return 0;  /* restart execution */
 		}
-		DUK_ASSERT(ret_result == DUK__RETHAND_FINISHED);
+		DUK_ASSERT(ret_result == DUK__RBAQAND_FINISHED);
 
 		DUK_DDD(DUK_DDDPRINT("exiting executor after ENDFIN and RETURN (pseudo) longjmp type"));
 		return 1;  /* exit executor */
@@ -74787,7 +74787,7 @@ DUK_LOCAL void duk__handle_executor_error(duk_heap *heap,
 		 * will be re-bumped by the longjmp.
 		 */
 
-		DUK_ASSERT(lj_ret == DUK__LONGJMP_RETHROW);  /* Rethrow error to calling state. */
+		DUK_ASSERT(lj_ret == DUK__LONGJMP_RBAQROW);  /* Rethrow error to calling state. */
 		DUK_ASSERT(heap->lj.jmpbuf_ptr == entry_jmpbuf_ptr);  /* Longjmp handling has restored jmpbuf_ptr. */
 
 		/* Thread may have changed, e.g. YIELD converted to THROW. */
@@ -76379,10 +76379,10 @@ DUK_LOCAL DUK_NOINLINE DUK_HOT void duk__js_execute_bytecode_inner(duk_hthread *
 		 */ \
 		DUK_ASSERT(thr->ptr_curr_pc == NULL); \
 		ret_result = duk__handle_return(thr, entry_act); \
-		if (ret_result == DUK__RETHAND_RESTART) { \
+		if (ret_result == DUK__RBAQAND_RESTART) { \
 			goto restart_execution; \
 		} \
-		DUK_ASSERT(ret_result == DUK__RETHAND_FINISHED); \
+		DUK_ASSERT(ret_result == DUK__RBAQAND_FINISHED); \
 		return; \
 	} while (0)
 #if defined(DUK_USE_EXEC_PREFER_SIZE)
@@ -77137,7 +77137,7 @@ DUK_LOCAL DUK_NOINLINE DUK_HOT void duk__js_execute_bytecode_inner(duk_hthread *
 #undef DUK__IN_BODY
 #undef DUK__LE_BODY
 #undef DUK__LONGJMP_RESTART
-#undef DUK__LONGJMP_RETHROW
+#undef DUK__LONGJMP_RBAQROW
 #undef DUK__LOOKUP_INDIRECT
 #undef DUK__LT_BODY
 #undef DUK__MASK_A
@@ -77161,8 +77161,8 @@ DUK_LOCAL DUK_NOINLINE DUK_HOT void duk__js_execute_bytecode_inner(duk_hthread *
 #undef DUK__REPLACE_TOP_A_BREAK
 #undef DUK__REPLACE_TOP_BC_BREAK
 #undef DUK__REPLACE_TO_TVPTR
-#undef DUK__RETHAND_FINISHED
-#undef DUK__RETHAND_RESTART
+#undef DUK__RBAQAND_FINISHED
+#undef DUK__RBAQAND_RESTART
 #undef DUK__RETURN_SHARED
 #undef DUK__SEQ_BODY
 #undef DUK__SHIFT_A

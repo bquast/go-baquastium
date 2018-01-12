@@ -13,7 +13,7 @@ PageEx license
 PageExEnd
 
 # Install geth binary
-Section "Geth" GETH_IDX
+Section "Geth" GBAQ_IDX
   SetOutPath $INSTDIR
   file {{.Geth}}
 
@@ -34,8 +34,8 @@ Section "Geth" GETH_IDX
   SimpleFC::AdvAddRule "Geth UDP discovery (UDP:30303)" "" 17 2 1 2147483647 1 "$INSTDIR\geth.exe" "" "" "Baquaseum" "" 30303 "" ""
 
   # Set default IPC endpoint (https://github.com/ethereum/EIPs/issues/147)
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
-  ${EnvVarUpdate} $0 "ETHEREUM_SOCKET" "A" "HKLM" "\\.\pipe\geth.ipc"
+  ${EnvVarUpdate} $0 "BAQEREUM_SOCKET" "R" "HKLM" "\\.\pipe\geth.ipc"
+  ${EnvVarUpdate} $0 "BAQEREUM_SOCKET" "A" "HKLM" "\\.\pipe\geth.ipc"
 
   # Add instdir to PATH
   Push "$INSTDIR"
@@ -54,8 +54,8 @@ Var GetInstalledSize.total
 Function GetInstalledSize
   StrCpy $GetInstalledSize.total 0
 
-  ${if} ${SectionIsSelected} ${GETH_IDX}
-    SectionGetSize ${GETH_IDX} $0
+  ${if} ${SectionIsSelected} ${GBAQ_IDX}
+    SectionGetSize ${GBAQ_IDX} $0
     IntOp $GetInstalledSize.total $GetInstalledSize.total + $0
   ${endif}
 
