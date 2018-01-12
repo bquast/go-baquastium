@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package state provides a caching layer atop the Ethereum state trie.
+// Package state provides a caching layer atop the Baquaseum state trie.
 package state
 
 import (
@@ -414,7 +414,7 @@ func (self *StateDB) createObject(addr common.Address) (newobj, prev *stateObjec
 //   1. sends funds to sha(account ++ (nonce + 1))
 //   2. tx_create(sha(account ++ nonce)) (note that this gets the address of 1)
 //
-// Carrying over the balance ensures that Ether doesn't disappear.
+// Carrying over the balance ensures that Baquas doesn't disappear.
 func (self *StateDB) CreateAccount(addr common.Address) {
 	new, prev := self.createObject(addr)
 	if prev != nil {

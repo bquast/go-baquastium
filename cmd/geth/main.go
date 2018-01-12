@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
 
-// geth is the official command-line client for Ethereum.
+// geth is the official command-line client for Baquaseum.
 package main
 
 import (
@@ -46,7 +46,7 @@ const (
 var (
 	// Git SHA1 commit hash of the release (set via linker flags)
 	gitCommit = ""
-	// Ethereum address of the Geth release oracle.
+	// Baquaseum address of the Geth release oracle.
 	relOracle = common.HexToAddress("0xfa7b9770ca4cb04296cac84f37736d4041251cdf")
 	// The app that holds all commands and flags.
 	app = utils.NewApp(gitCommit, "the go-ethereum command line interface")
@@ -93,7 +93,7 @@ var (
 		utils.ListenPortFlag,
 		utils.MaxPeersFlag,
 		utils.MaxPendingPeersFlag,
-		utils.EtherbaseFlag,
+		utils.BaquasbaseFlag,
 		utils.GasPriceFlag,
 		utils.MinerThreadsFlag,
 		utils.MiningEnabledFlag,
@@ -277,8 +277,8 @@ func startNode(ctx *cli.Context, stack *node.Node) {
 	}()
 	// Start auxiliary services if enabled
 	if ctx.GlobalBool(utils.MiningEnabledFlag.Name) || ctx.GlobalBool(utils.DeveloperFlag.Name) {
-		// Mining only makes sense if a full Ethereum node is running
-		var ethereum *eth.Ethereum
+		// Mining only makes sense if a full Baquaseum node is running
+		var ethereum *eth.Baquaseum
 		if err := stack.Service(&ethereum); err != nil {
 			utils.Fatalf("ethereum service not running: %v", err)
 		}

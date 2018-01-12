@@ -53,7 +53,7 @@ var ( // Commonly used command line flags.
 
 // Configure the app instance.
 func init() {
-	app = utils.NewApp(gitCommit, "an Ethereum key manager")
+	app = utils.NewApp(gitCommit, "an Baquaseum key manager")
 	app.Commands = []cli.Command{
 		commandGenerate,
 		commandInspect,

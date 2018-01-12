@@ -39,7 +39,7 @@ type testgeth struct {
 
 	// template variables for expect
 	Datadir   string
-	Etherbase string
+	Baquasbase string
 }
 
 func init() {
@@ -74,7 +74,7 @@ func runGeth(t *testing.T, args ...string) *testgeth {
 			}
 		case arg == "-etherbase" || arg == "--etherbase":
 			if i < len(args)-1 {
-				tt.Etherbase = args[i+1]
+				tt.Baquasbase = args[i+1]
 			}
 		}
 	}

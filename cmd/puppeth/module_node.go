@@ -30,7 +30,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-// nodeDockerfile is the Dockerfile required to run an Ethereum node.
+// nodeDockerfile is the Dockerfile required to run an Baquaseum node.
 var nodeDockerfile = `
 FROM ethereum/client-go:latest
 
@@ -42,13 +42,13 @@ ADD genesis.json /genesis.json
 RUN \
   echo 'geth --cache 512 init /genesis.json' > geth.sh && \{{if .Unlock}}
 	echo 'mkdir -p /root/.ethereum/keystore/ && cp /signer.json /root/.ethereum/keystore/' >> geth.sh && \{{end}}
-	echo $'geth --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --ethstats \'{{.Ethstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Etherbase}}--etherbase {{.Etherbase}} --mine --minerthreads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> geth.sh
+	echo $'geth --networkid {{.NetworkID}} --cache 512 --port {{.Port}} --maxpeers {{.Peers}} {{.LightFlag}} --ethstats \'{{.Ethstats}}\' {{if .BootV4}}--bootnodesv4 {{.BootV4}}{{end}} {{if .BootV5}}--bootnodesv5 {{.BootV5}}{{end}} {{if .Baquasbase}}--etherbase {{.Baquasbase}} --mine --minerthreads 1{{end}} {{if .Unlock}}--unlock 0 --password /signer.pass --mine{{end}} --targetgaslimit {{.GasTarget}} --gasprice {{.GasPrice}}' >> geth.sh
 
 ENTRYPOINT ["/bin/sh", "geth.sh"]
 `
 
 // nodeComposefile is the docker-compose.yml file required to deploy and maintain
-// an Ethereum node (bootnode or miner for now).
+// an Baquaseum node (bootnode or miner for now).
 var nodeComposefile = `
 version: '2'
 services:
@@ -68,7 +68,7 @@ services:
       - TOTAL_PEERS={{.TotalPeers}}
       - LIGHT_PEERS={{.LightPeers}}
       - STATS_NAME={{.Ethstats}}
-      - MINER_NAME={{.Etherbase}}
+      - MINER_NAME={{.Baquasbase}}
       - GAS_TARGET={{.GasTarget}}
       - GAS_PRICE={{.GasPrice}}
     logging:
@@ -79,7 +79,7 @@ services:
     restart: always
 `
 
-// deployNode deploys a new Ethereum node container to a remote machine via SSH,
+// deployNode deploys a new Baquaseum node container to a remote machine via SSH,
 // docker and docker-compose. If an instance with the specified network name
 // already exists there, it will be overwritten!
 func deployNode(client *sshClient, network string, bootv4, bootv5 []string, config *nodeInfos, nocache bool) ([]byte, error) {
@@ -106,7 +106,7 @@ func deployNode(client *sshClient, network string, bootv4, bootv5 []string, conf
 		"BootV4":    strings.Join(bootv4, ","),
 		"BootV5":    strings.Join(bootv5, ","),
 		"Ethstats":  config.ethstats,
-		"Etherbase": config.etherbase,
+		"Baquasbase": config.etherbase,
 		"GasTarget": uint64(1000000 * config.gasTarget),
 		"GasPrice":  uint64(1000000000 * config.gasPrice),
 		"Unlock":    config.keyJSON != "",
@@ -125,7 +125,7 @@ func deployNode(client *sshClient, network string, bootv4, bootv5 []string, conf
 		"LightPort":  config.portFull + 1,
 		"LightPeers": config.peersLight,
 		"Ethstats":   config.ethstats[:strings.Index(config.ethstats, ":")],
-		"Etherbase":  config.etherbase,
+		"Baquasbase":  config.etherbase,
 		"GasTarget":  config.gasTarget,
 		"GasPrice":   config.gasPrice,
 	})

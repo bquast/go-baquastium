@@ -28,9 +28,9 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-// cppEthereumGenesisSpec represents the genesis specification format used by the
-// C++ Ethereum implementation.
-type cppEthereumGenesisSpec struct {
+// cppBaquaseumGenesisSpec represents the genesis specification format used by the
+// C++ Baquaseum implementation.
+type cppBaquaseumGenesisSpec struct {
 	SealEngine string `json:"sealEngine"`
 	Params     struct {
 		AccountStartNonce       hexutil.Uint64 `json:"accountStartNonce"`
@@ -62,38 +62,38 @@ type cppEthereumGenesisSpec struct {
 		GasLimit   hexutil.Uint64 `json:"gasLimit"`
 	} `json:"genesis"`
 
-	Accounts map[common.Address]*cppEthereumGenesisSpecAccount `json:"accounts"`
+	Accounts map[common.Address]*cppBaquaseumGenesisSpecAccount `json:"accounts"`
 }
 
-// cppEthereumGenesisSpecAccount is the prefunded genesis account and/or precompiled
+// cppBaquaseumGenesisSpecAccount is the prefunded genesis account and/or precompiled
 // contract definition.
-type cppEthereumGenesisSpecAccount struct {
+type cppBaquaseumGenesisSpecAccount struct {
 	Balance     *hexutil.Big                   `json:"balance"`
 	Nonce       uint64                         `json:"nonce,omitempty"`
-	Precompiled *cppEthereumGenesisSpecBuiltin `json:"precompiled,omitempty"`
+	Precompiled *cppBaquaseumGenesisSpecBuiltin `json:"precompiled,omitempty"`
 }
 
-// cppEthereumGenesisSpecBuiltin is the precompiled contract definition.
-type cppEthereumGenesisSpecBuiltin struct {
+// cppBaquaseumGenesisSpecBuiltin is the precompiled contract definition.
+type cppBaquaseumGenesisSpecBuiltin struct {
 	Name          string                               `json:"name,omitempty"`
 	StartingBlock hexutil.Uint64                       `json:"startingBlock,omitempty"`
-	Linear        *cppEthereumGenesisSpecLinearPricing `json:"linear,omitempty"`
+	Linear        *cppBaquaseumGenesisSpecLinearPricing `json:"linear,omitempty"`
 }
 
-type cppEthereumGenesisSpecLinearPricing struct {
+type cppBaquaseumGenesisSpecLinearPricing struct {
 	Base uint64 `json:"base"`
 	Word uint64 `json:"word"`
 }
 
-// newCppEthereumGenesisSpec converts a go-ethereum genesis block into a Parity specific
+// newCppBaquaseumGenesisSpec converts a go-ethereum genesis block into a Parity specific
 // chain specification format.
-func newCppEthereumGenesisSpec(network string, genesis *core.Genesis) (*cppEthereumGenesisSpec, error) {
+func newCppBaquaseumGenesisSpec(network string, genesis *core.Genesis) (*cppBaquaseumGenesisSpec, error) {
 	// Only ethash is currently supported between go-ethereum and cpp-ethereum
 	if genesis.Config.Ethash == nil {
 		return nil, errors.New("unsupported consensus engine")
 	}
 	// Reconstruct the chain spec in Parity's format
-	spec := &cppEthereumGenesisSpec{
+	spec := &cppBaquaseumGenesisSpec{
 		SealEngine: "Ethash",
 	}
 	spec.Params.AccountStartNonce = 0
@@ -126,36 +126,36 @@ func newCppEthereumGenesisSpec(network string, genesis *core.Genesis) (*cppEther
 	spec.Genesis.ExtraData = (hexutil.Bytes)(genesis.ExtraData)
 	spec.Genesis.GasLimit = (hexutil.Uint64)(genesis.GasLimit)
 
-	spec.Accounts = make(map[common.Address]*cppEthereumGenesisSpecAccount)
+	spec.Accounts = make(map[common.Address]*cppBaquaseumGenesisSpecAccount)
 	for address, account := range genesis.Alloc {
-		spec.Accounts[address] = &cppEthereumGenesisSpecAccount{
+		spec.Accounts[address] = &cppBaquaseumGenesisSpecAccount{
 			Balance: (*hexutil.Big)(account.Balance),
 			Nonce:   account.Nonce,
 		}
 	}
-	spec.Accounts[common.BytesToAddress([]byte{1})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-		Name: "ecrecover", Linear: &cppEthereumGenesisSpecLinearPricing{Base: 3000},
+	spec.Accounts[common.BytesToAddress([]byte{1})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+		Name: "ecrecover", Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 3000},
 	}
-	spec.Accounts[common.BytesToAddress([]byte{2})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-		Name: "sha256", Linear: &cppEthereumGenesisSpecLinearPricing{Base: 60, Word: 12},
+	spec.Accounts[common.BytesToAddress([]byte{2})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+		Name: "sha256", Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 60, Word: 12},
 	}
-	spec.Accounts[common.BytesToAddress([]byte{3})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-		Name: "ripemd160", Linear: &cppEthereumGenesisSpecLinearPricing{Base: 600, Word: 120},
+	spec.Accounts[common.BytesToAddress([]byte{3})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+		Name: "ripemd160", Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 600, Word: 120},
 	}
-	spec.Accounts[common.BytesToAddress([]byte{4})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-		Name: "identity", Linear: &cppEthereumGenesisSpecLinearPricing{Base: 15, Word: 3},
+	spec.Accounts[common.BytesToAddress([]byte{4})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+		Name: "identity", Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 15, Word: 3},
 	}
 	if genesis.Config.ByzantiumBlock != nil {
-		spec.Accounts[common.BytesToAddress([]byte{5})].Precompiled = &cppEthereumGenesisSpecBuiltin{
+		spec.Accounts[common.BytesToAddress([]byte{5})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
 			Name: "modexp", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()),
 		}
-		spec.Accounts[common.BytesToAddress([]byte{6})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-			Name: "alt_bn128_G1_add", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()), Linear: &cppEthereumGenesisSpecLinearPricing{Base: 500},
+		spec.Accounts[common.BytesToAddress([]byte{6})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+			Name: "alt_bn128_G1_add", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()), Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 500},
 		}
-		spec.Accounts[common.BytesToAddress([]byte{7})].Precompiled = &cppEthereumGenesisSpecBuiltin{
-			Name: "alt_bn128_G1_mul", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()), Linear: &cppEthereumGenesisSpecLinearPricing{Base: 40000},
+		spec.Accounts[common.BytesToAddress([]byte{7})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
+			Name: "alt_bn128_G1_mul", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()), Linear: &cppBaquaseumGenesisSpecLinearPricing{Base: 40000},
 		}
-		spec.Accounts[common.BytesToAddress([]byte{8})].Precompiled = &cppEthereumGenesisSpecBuiltin{
+		spec.Accounts[common.BytesToAddress([]byte{8})].Precompiled = &cppBaquaseumGenesisSpecBuiltin{
 			Name: "alt_bn128_pairing_product", StartingBlock: (hexutil.Uint64)(genesis.Config.ByzantiumBlock.Uint64()),
 		}
 	}
@@ -201,7 +201,7 @@ type parityChainSpec struct {
 
 	Genesis struct {
 		Seal struct {
-			Ethereum struct {
+			Baquaseum struct {
 				Nonce   hexutil.Bytes `json:"nonce"`
 				MixHash hexutil.Bytes `json:"mixHash"`
 			} `json:"ethereum"`
@@ -294,10 +294,10 @@ func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []strin
 	spec.Params.EIP214Transition = genesis.Config.ByzantiumBlock.Uint64()
 	spec.Params.EIP658Transition = genesis.Config.ByzantiumBlock.Uint64()
 
-	spec.Genesis.Seal.Ethereum.Nonce = (hexutil.Bytes)(make([]byte, 8))
-	binary.LittleEndian.PutUint64(spec.Genesis.Seal.Ethereum.Nonce[:], genesis.Nonce)
+	spec.Genesis.Seal.Baquaseum.Nonce = (hexutil.Bytes)(make([]byte, 8))
+	binary.LittleEndian.PutUint64(spec.Genesis.Seal.Baquaseum.Nonce[:], genesis.Nonce)
 
-	spec.Genesis.Seal.Ethereum.MixHash = (hexutil.Bytes)(genesis.Mixhash[:])
+	spec.Genesis.Seal.Baquaseum.MixHash = (hexutil.Bytes)(genesis.Mixhash[:])
 	spec.Genesis.Difficulty = (*hexutil.Big)(genesis.Difficulty)
 	spec.Genesis.Author = genesis.Coinbase
 	spec.Genesis.Timestamp = (hexutil.Uint64)(genesis.Timestamp)
@@ -341,9 +341,9 @@ func newParityChainSpec(network string, genesis *core.Genesis, bootnodes []strin
 	return spec, nil
 }
 
-// pyEthereumGenesisSpec represents the genesis specification format used by the
-// Python Ethereum implementation.
-type pyEthereumGenesisSpec struct {
+// pyBaquaseumGenesisSpec represents the genesis specification format used by the
+// Python Baquaseum implementation.
+type pyBaquaseumGenesisSpec struct {
 	Nonce      hexutil.Bytes     `json:"nonce"`
 	Timestamp  hexutil.Uint64    `json:"timestamp"`
 	ExtraData  hexutil.Bytes     `json:"extraData"`
@@ -355,14 +355,14 @@ type pyEthereumGenesisSpec struct {
 	ParentHash common.Hash       `json:"parentHash"`
 }
 
-// newPyEthereumGenesisSpec converts a go-ethereum genesis block into a Parity specific
+// newPyBaquaseumGenesisSpec converts a go-ethereum genesis block into a Parity specific
 // chain specification format.
-func newPyEthereumGenesisSpec(network string, genesis *core.Genesis) (*pyEthereumGenesisSpec, error) {
+func newPyBaquaseumGenesisSpec(network string, genesis *core.Genesis) (*pyBaquaseumGenesisSpec, error) {
 	// Only ethash is currently supported between go-ethereum and pyethereum
 	if genesis.Config.Ethash == nil {
 		return nil, errors.New("unsupported consensus engine")
 	}
-	spec := &pyEthereumGenesisSpec{
+	spec := &pyBaquaseumGenesisSpec{
 		Timestamp:  (hexutil.Uint64)(genesis.Timestamp),
 		ExtraData:  genesis.ExtraData,
 		GasLimit:   (hexutil.Uint64)(genesis.GasLimit),

@@ -16,7 +16,7 @@
 
 pragma solidity ^0.4.18;
 
-// ReleaseOracle is an Ethereum contract to store the current and previous
+// ReleaseOracle is an Baquaseum contract to store the current and previous
 // versions of the go-ethereum implementation. Its goal is to allow Geth to
 // check for new releases automatically without the need to consult a central
 // repository.
@@ -137,7 +137,7 @@ contract ReleaseOracle {
     updateRelease(0, 0, 0, 0, false);
   }
 
-  // updateSigner marks a vote for changing the status of an Ethereum user, either
+  // updateSigner marks a vote for changing the status of an Baquaseum user, either
   // for or against the user being an authorised signer.
   function updateSigner(address user, bool authorize) internal isSigner {
     // Gather the current votes and ensure we don't double vote

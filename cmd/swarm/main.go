@@ -102,7 +102,7 @@ var (
 	}
 	SwarmSwapAPIFlag = cli.StringFlag{
 		Name:   "swap-api",
-		Usage:  "URL of the Ethereum API provider to use to settle SWAP payments",
+		Usage:  "URL of the Baquaseum API provider to use to settle SWAP payments",
 		EnvVar: SWARM_ENV_SWAP_API,
 	}
 	SwarmSyncEnabledFlag = cli.BoolTFlag{
@@ -112,7 +112,7 @@ var (
 	}
 	EnsAPIFlag = cli.StringFlag{
 		Name:   "ens-api",
-		Usage:  "URL of the Ethereum API provider to use for ENS record lookups",
+		Usage:  "URL of the Baquaseum API provider to use for ENS record lookups",
 		EnvVar: SWARM_ENV_ENS_API,
 	}
 	EnsAddrFlag = cli.StringFlag{
@@ -176,7 +176,7 @@ func init() {
 	utils.ListenPortFlag.Value = 30399
 }
 
-var app = utils.NewApp(gitCommit, "Ethereum Swarm")
+var app = utils.NewApp(gitCommit, "Baquaseum Swarm")
 
 // This init function creates the cli.App.
 func init() {

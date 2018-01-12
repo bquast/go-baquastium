@@ -49,26 +49,26 @@ type NodeConfig struct {
 	// set to zero, then only the configured static and trusted peers can connect.
 	MaxPeers int
 
-	// EthereumEnabled specifies whether the node should run the Ethereum protocol.
-	EthereumEnabled bool
+	// BaquaseumEnabled specifies whether the node should run the Baquaseum protocol.
+	BaquaseumEnabled bool
 
-	// EthereumNetworkID is the network identifier used by the Ethereum protocol to
+	// BaquaseumNetworkID is the network identifier used by the Baquaseum protocol to
 	// decide if remote peers should be accepted or not.
-	EthereumNetworkID int64 // uint64 in truth, but Java can't handle that...
+	BaquaseumNetworkID int64 // uint64 in truth, but Java can't handle that...
 
-	// EthereumGenesis is the genesis JSON to use to seed the blockchain with. An
+	// BaquaseumGenesis is the genesis JSON to use to seed the blockchain with. An
 	// empty genesis state is equivalent to using the mainnet's state.
-	EthereumGenesis string
+	BaquaseumGenesis string
 
-	// EthereumDatabaseCache is the system memory in MB to allocate for database caching.
+	// BaquaseumDatabaseCache is the system memory in MB to allocate for database caching.
 	// A minimum of 16MB is always reserved.
-	EthereumDatabaseCache int
+	BaquaseumDatabaseCache int
 
-	// EthereumNetStats is a netstats connection string to use to report various
+	// BaquaseumNetStats is a netstats connection string to use to report various
 	// chain, transaction and node stats to a monitoring server.
 	//
 	// It has the form "nodename:secret@host:port"
-	EthereumNetStats string
+	BaquaseumNetStats string
 
 	// WhisperEnabled specifies whether the node should run the Whisper protocol.
 	WhisperEnabled bool
@@ -79,9 +79,9 @@ type NodeConfig struct {
 var defaultNodeConfig = &NodeConfig{
 	BootstrapNodes:        FoundationBootnodes(),
 	MaxPeers:              25,
-	EthereumEnabled:       true,
-	EthereumNetworkID:     1,
-	EthereumDatabaseCache: 16,
+	BaquaseumEnabled:       true,
+	BaquaseumNetworkID:     1,
+	BaquaseumDatabaseCache: 16,
 }
 
 // NewNodeConfig creates a new node option set, initialized to the default values.
@@ -90,7 +90,7 @@ func NewNodeConfig() *NodeConfig {
 	return &config
 }
 
-// Node represents a Geth Ethereum node instance.
+// Node represents a Geth Baquaseum node instance.
 type Node struct {
 	node *node.Node
 }
@@ -129,39 +129,39 @@ func NewNode(datadir string, config *NodeConfig) (stack *Node, _ error) {
 	}
 
 	var genesis *core.Genesis
-	if config.EthereumGenesis != "" {
+	if config.BaquaseumGenesis != "" {
 		// Parse the user supplied genesis spec if not mainnet
 		genesis = new(core.Genesis)
-		if err := json.Unmarshal([]byte(config.EthereumGenesis), genesis); err != nil {
+		if err := json.Unmarshal([]byte(config.BaquaseumGenesis), genesis); err != nil {
 			return nil, fmt.Errorf("invalid genesis spec: %v", err)
 		}
 		// If we have the testnet, hard code the chain configs too
-		if config.EthereumGenesis == TestnetGenesis() {
+		if config.BaquaseumGenesis == TestnetGenesis() {
 			genesis.Config = params.TestnetChainConfig
-			if config.EthereumNetworkID == 1 {
-				config.EthereumNetworkID = 3
+			if config.BaquaseumNetworkID == 1 {
+				config.BaquaseumNetworkID = 3
 			}
 		}
 	}
-	// Register the Ethereum protocol if requested
-	if config.EthereumEnabled {
+	// Register the Baquaseum protocol if requested
+	if config.BaquaseumEnabled {
 		ethConf := eth.DefaultConfig
 		ethConf.Genesis = genesis
 		ethConf.SyncMode = downloader.LightSync
-		ethConf.NetworkId = uint64(config.EthereumNetworkID)
-		ethConf.DatabaseCache = config.EthereumDatabaseCache
+		ethConf.NetworkId = uint64(config.BaquaseumNetworkID)
+		ethConf.DatabaseCache = config.BaquaseumDatabaseCache
 		if err := rawStack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
 			return les.New(ctx, &ethConf)
 		}); err != nil {
 			return nil, fmt.Errorf("ethereum init: %v", err)
 		}
 		// If netstats reporting is requested, do it
-		if config.EthereumNetStats != "" {
+		if config.BaquaseumNetStats != "" {
 			if err := rawStack.Register(func(ctx *node.ServiceContext) (node.Service, error) {
-				var lesServ *les.LightEthereum
+				var lesServ *les.LightBaquaseum
 				ctx.Service(&lesServ)
 
-				return ethstats.New(config.EthereumNetStats, nil, lesServ)
+				return ethstats.New(config.BaquaseumNetStats, nil, lesServ)
 			}); err != nil {
 				return nil, fmt.Errorf("netstats init: %v", err)
 			}
@@ -189,13 +189,13 @@ func (n *Node) Stop() error {
 	return n.node.Stop()
 }
 
-// GetEthereumClient retrieves a client to access the Ethereum subsystem.
-func (n *Node) GetEthereumClient() (client *EthereumClient, _ error) {
+// GetBaquaseumClient retrieves a client to access the Baquaseum subsystem.
+func (n *Node) GetBaquaseumClient() (client *BaquaseumClient, _ error) {
 	rpc, err := n.node.Attach()
 	if err != nil {
 		return nil, err
 	}
-	return &EthereumClient{ethclient.NewClient(rpc)}, nil
+	return &BaquaseumClient{ethclient.NewClient(rpc)}, nil
 }
 
 // GetNodeInfo gathers and returns a collection of metadata known about the host.

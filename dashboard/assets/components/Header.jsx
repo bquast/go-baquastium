@@ -94,7 +94,7 @@ class Header extends Component<Props> {
 						{this.arrowButton}
 					</Transition>
 					<Typography type="title" color="inherit" noWrap className={classes.mainText}>
-						Go Ethereum Dashboard
+						Go Baquaseum Dashboard
 					</Typography>
 				</Toolbar>
 			</AppBar>

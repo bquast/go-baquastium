@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package les implements the Light Ethereum Subprotocol.
+// Package les implements the Light Baquaseum Subprotocol.
 package les
 
 import (
@@ -49,7 +49,7 @@ type LesServer struct {
 	chtIndexer, bloomTrieIndexer *core.ChainIndexer
 }
 
-func NewLesServer(eth *eth.Ethereum, config *eth.Config) (*LesServer, error) {
+func NewLesServer(eth *eth.Baquaseum, config *eth.Config) (*LesServer, error) {
 	quitSync := make(chan struct{})
 	pm, err := NewProtocolManager(eth.BlockChain().Config(), false, ServerProtocolVersions, config.NetworkId, eth.EventMux(), eth.Engine(), newPeerSet(), eth.BlockChain(), eth.TxPool(), eth.ChainDb(), nil, nil, quitSync, new(sync.WaitGroup))
 	if err != nil {

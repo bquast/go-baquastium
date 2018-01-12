@@ -42,9 +42,9 @@ It has these top-level messages:
 	GetPublicKey
 	PublicKey
 	GetAddress
-	EthereumGetAddress
+	BaquaseumGetAddress
 	Address
-	EthereumAddress
+	BaquaseumAddress
 	WipeDevice
 	LoadDevice
 	ResetDevice
@@ -69,12 +69,12 @@ It has these top-level messages:
 	SimpleSignTx
 	TxRequest
 	TxAck
-	EthereumSignTx
-	EthereumTxRequest
-	EthereumTxAck
-	EthereumSignMessage
-	EthereumVerifyMessage
-	EthereumMessageSignature
+	BaquaseumSignTx
+	BaquaseumTxRequest
+	BaquaseumTxAck
+	BaquaseumSignMessage
+	BaquaseumVerifyMessage
+	BaquaseumMessageSignature
 	SignIdentity
 	SignedIdentity
 	GetECDHSessionKey

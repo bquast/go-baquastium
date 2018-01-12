@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-// Package miner implements Ethereum block creation and mining.
+// Package miner implements Baquaseum block creation and mining.
 package miner
 
 import (
@@ -105,7 +105,7 @@ out:
 
 func (self *Miner) Start(coinbase common.Address) {
 	atomic.StoreInt32(&self.shouldStart, 1)
-	self.worker.setEtherbase(coinbase)
+	self.worker.setBaquasbase(coinbase)
 	self.coinbase = coinbase
 
 	if atomic.LoadInt32(&self.canStart) == 0 {
@@ -177,7 +177,7 @@ func (self *Miner) PendingBlock() *types.Block {
 	return self.worker.pendingBlock()
 }
 
-func (self *Miner) SetEtherbase(addr common.Address) {
+func (self *Miner) SetBaquasbase(addr common.Address) {
 	self.coinbase = addr
-	self.worker.setEtherbase(addr)
+	self.worker.setBaquasbase(addr)
 }

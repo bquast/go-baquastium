@@ -59,7 +59,7 @@ func TestConsoleWelcome(t *testing.T) {
 Welcome to the Geth JavaScript console!
 
 instance: Geth/v{{gethver}}/{{goos}}-{{goarch}}/{{gover}}
-coinbase: {{.Etherbase}}
+coinbase: {{.Baquasbase}}
 at block: 0 ({{niltime}})
  datadir: {{.Datadir}}
  modules: {{apis}}
@@ -134,7 +134,7 @@ func testAttachWelcome(t *testing.T, geth *testgeth, endpoint, apis string) {
 	attach.SetTemplateFunc("goarch", func() string { return runtime.GOARCH })
 	attach.SetTemplateFunc("gover", runtime.Version)
 	attach.SetTemplateFunc("gethver", func() string { return params.Version })
-	attach.SetTemplateFunc("etherbase", func() string { return geth.Etherbase })
+	attach.SetTemplateFunc("etherbase", func() string { return geth.Baquasbase })
 	attach.SetTemplateFunc("niltime", func() string { return time.Unix(0, 0).Format(time.RFC1123) })
 	attach.SetTemplateFunc("ipc", func() bool { return strings.HasPrefix(endpoint, "ipc") })
 	attach.SetTemplateFunc("datadir", func() string { return geth.Datadir })
